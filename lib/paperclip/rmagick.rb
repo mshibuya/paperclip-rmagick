@@ -1,5 +1,4 @@
 require 'paperclip'
-require 'RMagick'
 
 module Paperclip
   class Rmagick < Thumbnail
@@ -16,6 +15,8 @@ module Paperclip
         img.send(*parse_geometry)
         img.write("#{@format ? "#{@format}:" : ''}#{File.expand_path(dst.path)}")
         img.destroy!
+      rescue NameError
+        raise "RMagick is not loaded. Please add following line to your Gemfile.\ngem 'rmagick', :require => 'RMagick'"
       rescue ::Magick::ImageMagickError
         raise PaperclipError, "There was an error processing the thumbnail for #{@basename}" if @whiny
       end
