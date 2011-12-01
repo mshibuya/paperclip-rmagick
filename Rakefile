@@ -17,8 +17,8 @@ Jeweler::Tasks.new do |gem|
   gem.name = "paperclip-rmagick"
   gem.homepage = "http://github.com/mshibuya/paperclip-rmagick"
   gem.license = "MIT"
-  gem.summary = %Q{TODO: one-line summary of your gem}
-  gem.description = %Q{TODO: longer description of your gem}
+  gem.summary = %Q{Paperclip processor using RMagick for image manipulation}
+  gem.description = %Q{Paperclip processor using RMagick for image manipulation. Requires Paperclip and RMagick installed.}
   gem.email = "mit.shibuya@gmail.com"
   gem.authors = ["M.Shibuya"]
   # dependencies defined in Gemfile
@@ -38,7 +38,7 @@ end
 
 task :default => :spec
 
-require 'rake/rdoctask'
+require 'rdoc/task'
 Rake::RDocTask.new do |rdoc|
   version = File.exist?('VERSION') ? File.read('VERSION') : ""
 
