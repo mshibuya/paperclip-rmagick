@@ -12,34 +12,15 @@ module Paperclip
         if options[:filter_method]
           img = attachment.instance.send(options[:filter_method], img)
         end
-        img.send(*parse_geometry)
+        img.change_geometry!(@target_geometry.to_s) do |cols, rows, image|
+          image.resize!(cols,rows)
+        end
         img.write("#{@format ? "#{@format}:" : ''}#{File.expand_path(dst.path)}")
         img.destroy!
-      rescue NameError
-        raise "RMagick is not loaded. Please add following line to your Gemfile.\ngem 'rmagick', :require => 'RMagick'"
       rescue ::Magick::ImageMagickError
         raise PaperclipError, "There was an error processing the thumbnail for #{@basename}" if @whiny
       end
       dst
-    end
-
-  private
-
-    def parse_geometry
-      geometry = @target_geometry
-      method = if geometry && geometry.to_s.match(/[^\d]$/)
-        case geometry.to_s[-1,1]
-        when '!'
-          :resize!
-        when '>'
-          :resize_to_fit!
-        when '^'
-          :resize_to_fill!
-        end
-      else
-        :resize_to_fit!
-      end
-      [method, geometry.width.to_i, geometry.height.to_i]
     end
   end
 end
