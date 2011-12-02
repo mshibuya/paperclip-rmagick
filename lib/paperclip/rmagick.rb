@@ -9,8 +9,13 @@ module Paperclip
 
       begin
         img = ::Magick::ImageList.new(File.expand_path(src.path)).first
-        if options[:filter_method]
-          img = attachment.instance.send(options[:filter_method], img)
+        if filter = options[:rmagick_filter]
+          if filter.is_a?(String) || filter.is_a?(Symbol)
+            img = attachment.instance.send(filter, oldimg = img)
+            oldimg.destroy! unless oldimg.equal? img
+          else
+            raise "PaperclipRMagick: Unsupported filter type - #{filter.inspect}"
+          end
         end
         img.change_geometry!(@target_geometry.to_s) do |cols, rows, image|
           image.resize!(cols,rows)
